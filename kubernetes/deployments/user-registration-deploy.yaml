@@ -1,0 +1,36 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: user-registration-deploy
+  labels:
+    app: credit-nation
+    service: user-registration
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: credit-nation
+      service: user-registration
+  minReadySeconds: 10
+  strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 1
+        maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: credit-nation
+        service: user-registration
+    spec:
+      containers:
+      - name: user-registration-container
+        image: user-registration:1.0.0
+        ports:
+        - containerPort: 8000
+        env:
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: cluster-secrets
+              key: jwt-secret
