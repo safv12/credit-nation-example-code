@@ -7,10 +7,8 @@ module.exports = (app) => {
    */
   app.post('/users', (req, res) => {
     user.model.create(req.body)
-      .then((data, err) => {
-        if (err) res.send(err);
-        res.send(data);
-      });
+      .then(data => res.send(data))
+      .catch(err => res.send(err));
   });
 
   /**
@@ -40,7 +38,7 @@ module.exports = (app) => {
         tokenType: 'Bearer',
         authToken: jwt.sign({
           userId: data.id,
-        }, process.env.JWT_SECRET, { expiresIn: 60 * 60 }),
+        }, process.env.JWT_SECRET, { expiresIn: '12h' }),
       });
     });
   });
