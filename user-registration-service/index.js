@@ -1,8 +1,11 @@
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 const express = require('express');
+const morgan = require('morgan');
 
 const app = express();
+app.use(morgan('dev'));
+
 const sequelize = new Sequelize('sqlite:data/user-api.db');
 
 const port = 8000;

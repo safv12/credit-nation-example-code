@@ -7,7 +7,10 @@ module.exports = (app) => {
    */
   app.post('/users', (req, res) => {
     user.model.create(req.body)
-      .then((data) => { res.send(data); });
+      .then((data, err) => {
+        if (err) res.send(err);
+        res.send(data);
+      });
   });
 
   /**
@@ -15,7 +18,7 @@ module.exports = (app) => {
    */
   app.get('/users', (req, res) => {
     user.model.findAll()
-      .then((users) => { res.send(users); });
+      .then(users => res.send(users));
   });
 
   /**

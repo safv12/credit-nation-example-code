@@ -12,7 +12,8 @@ exports.validate = (req, res, next) => {
   var token = req.headers["authorization"];
 
   if (token) {
-    jwt.verify(token, secret, (err, decoded) => {
+    var hash = token.split(' ')[1];
+    jwt.verify(hash, secret, (err, decoded) => {
       if (err) {
         return res.json({
           errorCode: "Unauthorized",
