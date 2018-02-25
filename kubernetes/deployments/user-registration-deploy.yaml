@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: user-registration-container
-        image: user-registration:1.0.2
+        image: user-registration:1.0.0
         ports:
         - containerPort: 8000
         env:

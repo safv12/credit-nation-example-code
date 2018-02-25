@@ -25,10 +25,12 @@ spec:
     spec:
       containers:
       - name: api-gateway-container
-        image: api-gateway:1.0.6
+        image: api-gateway:1.0.0
         ports:
         - containerPort: 9001
         env:
+        - name: USER_REGISTRATION_SERVICE_URL
+          value: user-registration-svc
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
