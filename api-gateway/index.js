@@ -1,25 +1,17 @@
 const express = require("express");
-const httpProxy = require("express-http-proxy");
+const proxy = require("express-http-proxy");
 const jwtAuthorizer = require("./middlewares/jwt-authorizer");
 const morgan = require('morgan');
 
 const app = express();
 app.use(morgan('dev'));
 
-const userServiceProxy = httpProxy('user-registration-svc');
+// Health check endpoints
+app.get("/health", (req, res, next) => res.send({ isAlive: true }));
 
-// Public endpoints
-app.get("/health/", (req, res, next) => res.send({ isAlive: true }));
-app.post("/token/", (req, res, next) => userServiceProxy(req, res, next));
-app.post("/users/", (req, res, next) => userServiceProxy(req, res, next));
-
-// Authentication
-app.use((req, res, next) => {
-  jwtAuthorizer.validate(req, res, next);
-  next();
-});
-
-// User Service proxy requests
-app.get("/users/", (req, res, next) => userServiceProxy(req, res, next));
+// User registration service endpoints
+app.post('/users', proxy(process.env.USER_REGISTRATION_SERVICE_URL));
+app.get('/users', jwtAuthorizer.validate, proxy(process.env.USER_REGISTRATION_SERVICE_URL));
+app.post('/token', proxy(process.env.USER_REGISTRATION_SERVICE_URL));
 
 app.listen(9001, () => console.info("Api Gateway listen at: " + 9001));
