@@ -1,0 +1,38 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: api-gateway-deploy
+  labels:
+    app: credit-nation
+    service: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: credit-nation
+      service: api-gateway
+  minReadySeconds: 10
+  strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 1
+        maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: credit-nation
+        service: api-gateway
+    spec:
+      containers:
+      - name: api-gateway-container
+        image: api-gateway:1.0.0
+        ports:
+        - containerPort: 9001
+        env:
+        - name: USER_REGISTRATION_SERVICE_URL
+          value: user-registration-svc
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: cluster-secrets
+              key: jwt-secret

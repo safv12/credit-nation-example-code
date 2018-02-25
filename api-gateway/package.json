@@ -1,0 +1,20 @@
+{
+  "name": "api-gateway",
+  "version": "1.0.0",
+  "description": "Api gateway for credit nation app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "api-gateway"
+  ],
+  "author": "safv12",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "express-http-proxy": "^1.1.0",
+    "jsonwebtoken": "^8.1.1",
+    "morgan": "^1.9.0"
+  }
+}
