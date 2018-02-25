@@ -1,5 +1,20 @@
 const user = require('../models/userModel');
 const jwt = require('jsonwebtoken');
+const redis = require('redis');
+
+const publisher = redis.createClient({
+  host: process.env.REDIS_HOST,
+});
+
+const subscriber = redis.createClient({
+  host: process.env.REDIS_HOST,
+});
+
+subscriber.on('message', (channel, message) => {
+  console.log(`userCreated on channel ${channel} with message: ${message}`);
+});
+
+subscriber.subscribe('userCreated');
 
 module.exports = (app) => {
   /**
@@ -7,7 +22,10 @@ module.exports = (app) => {
    */
   app.post('/users', (req, res) => {
     user.model.create(req.body)
-      .then(data => res.send(data))
+      .then((data) => {
+        publisher.publish('userCreated', JSON.stringify(data));
+        res.send(data);
+      })
       .catch(err => res.send(err));
   });
 
