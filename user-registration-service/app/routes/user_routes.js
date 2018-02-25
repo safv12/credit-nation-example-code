@@ -6,16 +6,6 @@ const publisher = redis.createClient({
   host: process.env.REDIS_HOST,
 });
 
-const subscriber = redis.createClient({
-  host: process.env.REDIS_HOST,
-});
-
-subscriber.on('message', (channel, message) => {
-  console.log(`userCreated on channel ${channel} with message: ${message}`);
-});
-
-subscriber.subscribe('userCreated');
-
 module.exports = (app) => {
   /**
    * Creates a new user
