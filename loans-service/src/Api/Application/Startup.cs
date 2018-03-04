@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using LoanService.Api.Infrastructure.IntegrationEventSubscribers;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -35,6 +36,7 @@
         public static void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddTransient<IIntegrationEventSubscriber, UserCreatedSubscriber>();
         }
 
         /// <summary>
@@ -48,6 +50,12 @@
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            var subscribers = app.ApplicationServices.GetServices(typeof(IIntegrationEventSubscriber));
+            
+            foreach(IIntegrationEventSubscriber subscriber in subscribers) {
+                subscriber.Subscribe();
             }
 
             app.UseMvc();
