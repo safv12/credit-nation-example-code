@@ -20,7 +20,7 @@ namespace LoanService.Api.Application.Controllers
         /// </summary>
         /// <returns>A <see cref="Loan"/> class</returns>
         [HttpPost]
-        public IActionResult NewLoanRequest([FromBody] LoanDto loanDto)
+        public IActionResult NewLoanRequest([FromBody] NewLoanDto loanDto)
         {
             var loan = loanDto.ToDomain();
             return this.Ok(loan);

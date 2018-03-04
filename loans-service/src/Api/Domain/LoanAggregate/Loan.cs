@@ -8,20 +8,41 @@ namespace LoanService.Api.Domain.LoanAggregate {
     /// Test all logic related with the Loan Aggregate
     /// </summary>
     public class Loan : Aggregate<Guid> {
+
         public Loan(
+            Guid loanId,
+            Guid userId,
             double amount,
             int numberOfPayments,
             double rate,
-            Periodicity periodicity)
-            : base(Guid.NewGuid())
+            Periodicity periodicity,
+            LoanStatus status)
+            : base(loanId)
         {
+            if (userId == Guid.Empty) 
+            {
+                throw new InvalidOperationException("UserId should not be an empty GUID");
+            }
+
+            this.UserId = userId;
             this.Amount = amount;
             this.NumberOfPayments = numberOfPayments;
             this.InterestRate = rate;
             this.Periodicity = periodicity;
             this.Payments = new List<Payment>();
+            this.Status = status;
+        }
+
+        public Loan(Guid userId, double amount, int numberOfPayments, double rate, Periodicity periodicity)
+            : this(Guid.NewGuid(), userId, amount, numberOfPayments, rate, periodicity, LoanStatus.Requested)
+        {
             this.CalculatePayments();
         }
+
+        /// <summary>
+        /// User identifier
+        /// </summary>
+        public Guid UserId { get; private set;}
 
         /// <summary>
         /// Amount lended to the client
@@ -44,10 +65,14 @@ namespace LoanService.Api.Domain.LoanAggregate {
         public Periodicity Periodicity { get; private set; }
 
         /// <summary>
-        /// 
+        /// Loan payments
         /// </summary>
-        /// <returns></returns>
         public List<Payment> Payments { get; private set; }
+
+        /// <summary>
+        /// Loan status
+        /// </summary>
+        public LoanStatus Status { get; private set; }
 
         /// <summary>
         /// Calculates the loan payments
@@ -55,25 +80,28 @@ namespace LoanService.Api.Domain.LoanAggregate {
         private void CalculatePayments() {
             var paymentAmount = this.GetPaymentAmount();
             var ratePercent = this.InterestRate / 100;
-            var paymentBalance = this.Amount;
+            var initialBalance = this.Amount;
 
             for (var i = 1; i <= this.NumberOfPayments; i++) {
-                var paymentInterests = Round(paymentBalance * ratePercent);
+                var paymentInterests = Round(initialBalance * ratePercent);
                 var amortization = Round(paymentAmount - paymentInterests);
-                var finalBalance =  Round(paymentBalance - amortization);
+                var finalBalance =  Round(initialBalance - amortization);
 
                 this.Payments.Add(new Payment(
                     i,
-                    paymentBalance,
+                    initialBalance,
                     amortization,
                     paymentInterests,
                     paymentAmount,
                     finalBalance));
 
-                paymentBalance = finalBalance;
+                initialBalance = finalBalance;
             }
         }
 
+        /// <summary>
+        /// Calculates the montly payment amount
+        /// </summary>
         private double GetPaymentAmount() 
         {
             var ratePercent = this.InterestRate / 100;
@@ -81,6 +109,11 @@ namespace LoanService.Api.Domain.LoanAggregate {
             return Round(payment);
         }
 
+        /// <summary>
+        /// Round a double number into 2 decimal digits
+        /// </summary>
+        /// <param name="toRound">Number to round</param>
+        /// <returns>2 decimal double number</returns>
         private static double Round(double toRound)
         {
             return Math.Round(toRound, 2, MidpointRounding.ToEven);

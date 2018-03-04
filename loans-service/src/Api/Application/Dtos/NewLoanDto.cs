@@ -1,17 +1,18 @@
 using System;
-using System.Collections.Generic;
 using LoanService.Api.Domain.LoanAggregate;
 
 namespace LoanService.Api.Application.Dtos
 {
-    public class LoanDto
+    public class NewLoanDto
     {
-        public Guid UserId { get; set;}
+        public Guid UserId { get; set; }
+
         public double Amount { get; set; }
+
         public int NumberOfPayments { get; set; }
-        public double InterestRate { get; set; }
+
+        public double Rate { get; set; }
+
         public Periodicity Periodicity { get; set; }
-        public IReadOnlyList<Payment> Payments { get; set; }
-        public LoanStatus Status { get; set; }
     }
 }
