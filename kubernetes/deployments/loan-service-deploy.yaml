@@ -1,0 +1,33 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: loan-service-deploy
+  labels:
+    app: credit-nation
+    service: loan-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: credit-nation
+      service: loan-service
+  minReadySeconds: 10
+  strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 1
+        maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: credit-nation
+        service: loan-service
+    spec:
+      containers:
+      - name: loan-service-container
+        image: loan-service:1.0.0
+        ports:
+        - containerPort: 80
+        env:
+        - name: REDIS_HOST
+          value: redis-master-svc
