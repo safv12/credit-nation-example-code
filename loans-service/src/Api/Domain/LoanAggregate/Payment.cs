@@ -1,14 +1,16 @@
+using System;
 using LoanService.Api.Domain.SharedKernel;
 
 namespace LoanService.Api.Domain.LoanAggregate {
-    public class Payment : ValueObject {
+    public class Payment : Entity<Guid> {
         public Payment(
             int paymentNumber,
             double balance,
             double amortization,
             double interests,
             double requiredPayment,
-            double finalBalance) 
+            double finalBalance)
+            : base(Guid.NewGuid())
         {
             this.PaymentNumber = paymentNumber;
             this.Amoritization = amortization;
@@ -17,6 +19,10 @@ namespace LoanService.Api.Domain.LoanAggregate {
             this.RequiredPayment = requiredPayment;
             this.FinalBalance = finalBalance;
         }
+
+        private Payment()
+            : base(Guid.NewGuid())
+        {}
 
         public int PaymentNumber { get; private set;}
 

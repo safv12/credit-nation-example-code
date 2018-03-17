@@ -33,6 +33,10 @@ namespace LoanService.Api.Domain.LoanAggregate {
             this.Status = status;
         }
 
+        private Loan()
+            : base(Guid.NewGuid())
+        {}
+
         public Loan(Guid userId, double amount, int numberOfPayments, double rate, Periodicity periodicity)
             : this(Guid.NewGuid(), userId, amount, numberOfPayments, rate, periodicity, LoanStatus.Requested)
         {

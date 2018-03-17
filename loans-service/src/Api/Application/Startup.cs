@@ -4,9 +4,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using LoanService.Api.Domain.LoanAggregate;
     using LoanService.Api.Infrastructure.IntegrationEventSubscribers;
+    using LoanService.Api.Infrastructure.Repositories;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -37,6 +40,9 @@
         {
             services.AddMvc();
             services.AddTransient<IIntegrationEventSubscriber, UserCreatedSubscriber>();
+            services.AddTransient<ILoanRepository, LoanRepository>();
+            services.AddDbContext<LoanServiceContext>(options => options.UseSqlite("Data Source=loanServiceDB.db", b => b.MigrationsAssembly("LoanService.Api.Application")));
+
         }
 
         /// <summary>
@@ -53,7 +59,7 @@
             }
 
             var subscribers = app.ApplicationServices.GetServices(typeof(IIntegrationEventSubscriber));
-            
+
             foreach(IIntegrationEventSubscriber subscriber in subscribers) {
                 subscriber.Subscribe();
             }

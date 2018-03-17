@@ -1,11 +1,12 @@
 FROM microsoft/aspnetcore-build:2.0 AS build-env
 WORKDIR /app
 
-# Copy csproj and restore as distinct layers
 COPY ./src/Api/Application/*.csproj ./
-RUN dotnet restore
 
-# Copy everything else and build
+RUN dotnet restore && \
+    dotnet ef migrations add InitialCreate && \
+    dotnet ef database update
+
 COPY . ./
 RUN dotnet publish ./src/Api/Application -c Release -o out
 

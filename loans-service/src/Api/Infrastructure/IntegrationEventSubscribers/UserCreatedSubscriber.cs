@@ -16,7 +16,6 @@ namespace LoanService.Api.Infrastructure.IntegrationEventSubscribers
         {
             var subscriber = redisConn.GetSubscriber();
             subscriber.Subscribe("userCreated", (channel, message) => this.HandleEvent(message));
-
         }
 
         public void HandleEvent(RedisValue message)

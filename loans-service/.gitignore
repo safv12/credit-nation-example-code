@@ -431,3 +431,5 @@ typings/
 # End of https://www.gitignore.io/api/aspnetcore,visualstudio,visualstudiocode
 
 .vscode
+.DS_Store
+loanServiceDB.db

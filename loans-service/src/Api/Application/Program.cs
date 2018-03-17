@@ -5,8 +5,10 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using LoanService.Api.Infrastructure.Repositories;
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
 
