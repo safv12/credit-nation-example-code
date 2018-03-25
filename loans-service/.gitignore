@@ -433,3 +433,4 @@ typings/
 .vscode
 .DS_Store
 loanServiceDB.db
+Migrations
