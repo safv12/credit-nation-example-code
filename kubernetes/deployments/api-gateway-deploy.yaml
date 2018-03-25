@@ -31,6 +31,8 @@ spec:
         env:
         - name: USER_REGISTRATION_SERVICE_URL
           value: user-registration-svc
+        - name: LOAN_SERVICE_URL
+          value: loan-service-svc
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:

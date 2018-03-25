@@ -13,5 +13,6 @@ app.get("/health", (req, res, next) => res.send({ isAlive: true }));
 app.post('/users', proxy(process.env.USER_REGISTRATION_SERVICE_URL));
 app.get('/users', jwtAuthorizer.validate, proxy(process.env.USER_REGISTRATION_SERVICE_URL));
 app.post('/token', proxy(process.env.USER_REGISTRATION_SERVICE_URL));
+app.post('/users/:id/loans', proxy(process.env.LOAN_SERVICE_URL));
 
 app.listen(9001, () => console.info("Api Gateway listen at: " + 9001));
