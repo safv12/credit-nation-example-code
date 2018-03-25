@@ -17,8 +17,24 @@ namespace LoanService.Api.Domain.UserAggregate
         {
         }
 
+        private User()
+            : base(Guid.NewGuid())
+        {
+        }
+
         public bool HasLoanInProgress { get; private set; }
 
         public Guid? LoanInProgressId { get; private set; }
+
+        public bool CanRequestLoan()
+        {
+            return !this.HasLoanInProgress;
+        }
+
+        public void RegisterNewLoan(Guid loanId)
+        {
+            this.HasLoanInProgress = true;
+            this.LoanInProgressId = loanId;
+        }
     }
 }

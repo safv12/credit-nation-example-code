@@ -1,4 +1,5 @@
 using System;
+using LoanService.Api.Domain.UserAggregate;
 using StackExchange.Redis;
 
 namespace LoanService.Api.Infrastructure.IntegrationEventSubscribers 
@@ -6,16 +7,25 @@ namespace LoanService.Api.Infrastructure.IntegrationEventSubscribers
     public class UserCreatedSubscriber : IIntegrationEventSubscriber
     {
         ConnectionMultiplexer redisConn;
+        private IUserRepository repo; 
 
-        public UserCreatedSubscriber()
+        public UserCreatedSubscriber(IUserRepository repository)
         {
-            redisConn = ConnectionMultiplexer.Connect(Environment.GetEnvironmentVariable("REDIS_HOST"));
+            this.repo = repository;
+            var conn = Environment.GetEnvironmentVariable("REDIS_HOST");
+            if (!String.IsNullOrEmpty(conn))
+            {
+                redisConn = ConnectionMultiplexer.Connect(conn);
+            }
         }
 
         public void Subscribe()
         {
-            var subscriber = redisConn.GetSubscriber();
-            subscriber.Subscribe("userCreated", (channel, message) => this.HandleEvent(message));
+            if (redisConn != null && redisConn.IsConnected)
+            {
+                var subscriber = redisConn.GetSubscriber();
+                subscriber.Subscribe("userCreated", (channel, message) => this.HandleEvent(message));
+            }
         }
 
         public void HandleEvent(RedisValue message)

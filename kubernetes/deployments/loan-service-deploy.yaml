@@ -25,9 +25,19 @@ spec:
     spec:
       containers:
       - name: loan-service-container
-        image: loan-service:1.0.0
+        image: loan-service:1.0.9
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: sqlitedb
+          mountPath: /db
         env:
         - name: REDIS_HOST
           value: redis-master-svc
+        - name: SQLITE_PATH
+          value: db/loanServiceDB.db
+      volumes:
+      - name: sqlitedb
+        hostPath:
+          path: /Users/Francisco/Code/credilikeme-bootcamp/loans-service/src/Api/Application/loanServiceDB.db
+          type: File

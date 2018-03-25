@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using LoanService.Api.Domain.LoanAggregate;
+    using LoanService.Api.Domain.UserAggregate;
     using LoanService.Api.Infrastructure.IntegrationEventSubscribers;
     using LoanService.Api.Infrastructure.Repositories;
     using Microsoft.AspNetCore.Builder;
@@ -41,6 +42,7 @@
             services.AddMvc();
             services.AddTransient<IIntegrationEventSubscriber, UserCreatedSubscriber>();
             services.AddTransient<ILoanRepository, LoanRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
             services.AddDbContext<LoanServiceContext>(options => options.UseSqlite("Data Source=loanServiceDB.db", b => b.MigrationsAssembly("LoanService.Api.Application")));
 
         }
