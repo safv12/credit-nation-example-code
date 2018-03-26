@@ -39,7 +39,9 @@
         /// <param name="services">Services configured</param>
         public static void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(op => {
+                op.Filters.Add(new CustomExceptionFilterAttribute());
+            });
             services.AddTransient<IIntegrationEventSubscriber, UserCreatedSubscriber>();
             services.AddTransient<ILoanRepository, LoanRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
