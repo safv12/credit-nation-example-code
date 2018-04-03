@@ -26,6 +26,7 @@ namespace LoanService.Api.Infrastructure.Repositories
                 db.Loan.Add(loan);
                 await db.SaveChangesAsync().ConfigureAwait(false);
             }
+            loan.Dispatch();
             return loan;
         }
     }

@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
-using LoanService.Api.Domain.SharedKernel;
+using Gbm.Api.Scopes.Domain.SeedWork;
+using LoanService.Api.Domain.LoanAggregate.DomainEvents;
 
 namespace LoanService.Api.Domain.LoanAggregate {
 
     /// <summary>
     /// Test all logic related with the Loan Aggregate
     /// </summary>
-    public class Loan : Aggregate<Guid> {
+    public class Loan : AggregateRoot<Guid> {
 
         public Loan(
             Guid loanId,
@@ -41,6 +42,7 @@ namespace LoanService.Api.Domain.LoanAggregate {
             : this(Guid.NewGuid(), userId, amount, numberOfPayments, rate, periodicity, LoanStatus.Requested)
         {
             this.CalculatePayments();
+            this.AddDomainEvent(new LoanCreated(this.Id));
         }
 
         /// <summary>

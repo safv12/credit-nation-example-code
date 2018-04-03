@@ -1,9 +1,9 @@
 using System;
-using LoanService.Api.Domain.SharedKernel;
+using Gbm.Api.Scopes.Domain.SeedWork;
 
 namespace LoanService.Api.Domain.UserAggregate
 {
-    public class User : Aggregate<Guid>
+    public class User : AggregateRoot<Guid>
     {
         public User(Guid userId, bool hasLoanInProgress, Guid? loanInProgressId)
             : base(userId)

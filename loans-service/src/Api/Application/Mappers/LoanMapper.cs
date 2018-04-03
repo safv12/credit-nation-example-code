@@ -20,6 +20,7 @@ namespace LoanService.Api.Application.Mappers
             return new LoanDto 
             {
                 UserId = from.UserId,
+                LoanId = from.Id,
                 Status = from.Status,
                 Payments = from.Payments,
                 Amount = from.Amount,

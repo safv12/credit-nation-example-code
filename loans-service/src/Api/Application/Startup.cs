@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Gbm.Api.Scopes.Services.DomainEventSubscribers;
     using LoanService.Api.Domain.LoanAggregate;
     using LoanService.Api.Domain.UserAggregate;
     using LoanService.Api.Infrastructure.IntegrationEventSubscribers;
@@ -45,6 +46,7 @@
             services.AddTransient<IIntegrationEventSubscriber, UserCreatedSubscriber>();
             services.AddTransient<ILoanRepository, LoanRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IDomainEventSubscriber, SomeSubscriber>();
             services.AddDbContext<LoanServiceContext>(options => options.UseSqlite("Data Source=loanServiceDB.db", b => b.MigrationsAssembly("LoanService.Api.Application")));
 
         }
@@ -62,9 +64,15 @@
                 app.UseDeveloperExceptionPage();
             }
 
+            // Integration event subscriber
             var subscribers = app.ApplicationServices.GetServices(typeof(IIntegrationEventSubscriber));
-
             foreach(IIntegrationEventSubscriber subscriber in subscribers) {
+                subscriber.Subscribe();
+            }
+
+            // Domain event subscribers
+            var domainEventSubscribers = app.ApplicationServices.GetServices(typeof(IDomainEventSubscriber));
+            foreach(IDomainEventSubscriber subscriber in domainEventSubscribers) {
                 subscriber.Subscribe();
             }
 
